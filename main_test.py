@@ -85,11 +85,14 @@ class DashboardWindow(QDialog):
     def add_object_button_fn(self):
         self.ips[self.w2.object_name.text()] = self.w2.ip.text()
 
-        new_widget = GridObject(self.w2.object_name.text(),self.w2.ip.text())
-
+        new_widget = GridObject(self.w2.object_name.text(),self.w2.ip.text(),index=self.rows_count)
+        self.dashboard_layout.itemAt(0).widget().hide()
         self.dashboard_layout.addWidget(new_widget, self.rows_count, self.cols_count)
         self.rows_count +=1
         self.w2.hide()
+    
+    
+    
 
 
 
@@ -102,11 +105,29 @@ class AddObjecWindow(QDialog):
         loadUi("new_object.ui", self)
 
 
-
-
-class GridObject(QPushButton):
-    def __init__(self,name, ip):
+class GridObject(QFrame):
+    def __init__(self,name, ip, index):
         super(GridObject, self).__init__()
+
+        self.w_link = GridButtonLink(name,ip)
+        self.w_edit = GridButtonEdit()
+        self.w_delete = GridButtonDelete(self)
+
+        self.layout = QHBoxLayout()
+        self.layout.setSpacing(0)
+        self.layout.addWidget(self.w_link,stretch=10)
+        self.layout.addWidget(self.w_edit,stretch=1)
+        self.layout.addWidget(self.w_delete,stretch=1)
+
+        self.setLayout(self.layout)
+    
+    def delete(self):
+        self.deleteLater()
+
+
+class GridButtonLink(QPushButton):
+    def __init__(self,name, ip):
+        super(GridButtonLink, self).__init__()
         self.setStyleSheet('QPushButton { color: rgb(238, 238, 236);}')
         self.setText(name)
         self.ip = ip
@@ -115,6 +136,37 @@ class GridObject(QPushButton):
     def go_link_fn(self):
         webbrowser.open(self.ip)
 
+class GridButtonEdit(QPushButton):
+    def __init__(self):
+        super(GridButtonEdit, self).__init__()
+        self.setStyleSheet('QPushButton { color: rgb(238, 238, 236);}')
+        self.setIcon(QIcon('icons/edit.svg'))
+        self.clicked.connect(self.go_edit_fn)
+    
+    def go_edit_fn(self):
+        self.w2 = AddObjecWindow()
+        self.w2.show() 
+        self.w2.add_object_button.clicked.connect(self.add_object_button_fn)
+
+class GridButtonDelete(QPushButton):
+    def __init__(self,grid_object):
+        super(GridButtonDelete, self).__init__()
+        self.setStyleSheet('QPushButton { color: rgb(238, 238, 236);}')
+        self.setIcon(QIcon('icons/delete.svg'))
+        self.clicked.connect(self.go_delete_fn)
+        
+        self.grid_object = grid_object
+
+    def go_delete_fn(self):
+        self.grid_object.delete()
+        pass
+
+
+
+        
+
+    
+    
 
 
 

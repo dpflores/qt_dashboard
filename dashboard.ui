@@ -52,7 +52,7 @@ font-size:28pt;
    </property>
    <layout class="QGridLayout" name="dashboard_layout">
     <item row="0" column="0">
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="empty_label">
       <property name="styleSheet">
        <string notr="true">color:rgb(238, 238, 236)</string>
       </property>
