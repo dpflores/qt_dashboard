@@ -1,5 +1,6 @@
 import sys
 import webbrowser
+import socket
 
 
 # Core non-GUI classes used by other modules
@@ -17,6 +18,8 @@ PASSWORDS = {
     'del':'123',
     'diego':'321'
 }
+
+VPN_ADRESS = '171.17.0.1'
 
 class LoginWindow(QDialog): 
     def __init__(self):
@@ -57,6 +60,10 @@ class LoginWindow(QDialog):
         w.resize(1000, 550)
         # w.setFixedWidth(1000)
         # w.setFixedHeight(550)
+    
+    def reject(self): 
+        # to avoid the esc key closing 
+        pass
 
         
 
@@ -75,6 +82,22 @@ class DashboardWindow(QDialog):
 
         # Managing the layout (QGridLayout)
         self.ips = {}
+
+        # 
+        try:
+            connection = socket.gethostbyaddr(VPN_ADRESS)
+            self.connected = True
+
+            self.indicator.setText('connected')
+            self.indicator.setStyleSheet("background-color:rgb(138, 226, 52)")
+            
+        except socket.herror:
+            self.connected = False
+            self.indicator.setText('disconnected')
+            self.indicator.setStyleSheet("background-color:rgb(239, 41, 41)")
+        
+        
+        # print(self.connected)
     
     def add_button_fn(self):
         self.w2 = AddObjecWindow()
@@ -85,11 +108,15 @@ class DashboardWindow(QDialog):
     def add_object_button_fn(self):
         self.ips[self.w2.object_name.text()] = self.w2.ip.text()
 
-        new_widget = GridObject(self.w2.object_name.text(),self.w2.ip.text(),index=self.rows_count)
+        new_widget = GridObject(self.w2.object_name.text(),self.w2.ip.text(),self)
         self.dashboard_layout.itemAt(0).widget().hide()
         self.dashboard_layout.addWidget(new_widget, self.rows_count, self.cols_count)
         self.rows_count +=1
-        self.w2.hide()
+        self.w2.deleteLater()
+    
+    def reject(self): 
+        # to avoid the esc key closing 
+        pass
     
     
     
@@ -104,17 +131,47 @@ class AddObjecWindow(QDialog):
         # Loading the UI
         loadUi("new_object.ui", self)
 
+class EditObjecWindow(QDialog):
+    def __init__(self):
+        # SuperClass
+        super(EditObjecWindow,self).__init__()
+        # Loading the UI
+        loadUi("edit_object.ui", self)
+
+
 
 class GridObject(QFrame):
-    def __init__(self,name, ip, index):
+    def __init__(self,name, ip, dashboard_window):
         super(GridObject, self).__init__()
 
-        self.w_link = GridButtonLink(name,ip)
-        self.w_edit = GridButtonEdit()
+        self.dashboard_window = dashboard_window
+
+        self.name = name
+        self.ip = ip
+
+        self.w_link = GridButtonLink(self.name,self.ip)
+        self.w_edit = GridButtonEdit(self)
         self.w_delete = GridButtonDelete(self)
 
         self.layout = QHBoxLayout()
         self.layout.setSpacing(0)
+        self.layout.addWidget(self.w_link,stretch=10)
+        self.layout.addWidget(self.w_edit,stretch=1)
+        self.layout.addWidget(self.w_delete,stretch=1)
+        self.setLayout(self.layout)
+
+    def update_layout(self,name, ip):
+        self.w_link.deleteLater()
+        self.w_edit.deleteLater()
+        self.w_delete.deleteLater()
+
+        self.name = name
+        self.ip = ip
+
+        self.w_link = GridButtonLink(self.name,self.ip)
+        self.w_edit = GridButtonEdit(self)
+        self.w_delete = GridButtonDelete(self)
+
         self.layout.addWidget(self.w_link,stretch=10)
         self.layout.addWidget(self.w_edit,stretch=1)
         self.layout.addWidget(self.w_delete,stretch=1)
@@ -123,6 +180,9 @@ class GridObject(QFrame):
     
     def delete(self):
         self.deleteLater()
+        self.dashboard_window.rows_count -=1
+        if self.dashboard_window.rows_count == 0:
+            self.dashboard_window.dashboard_layout.itemAt(0).widget().show()
 
 
 class GridButtonLink(QPushButton):
@@ -137,16 +197,24 @@ class GridButtonLink(QPushButton):
         webbrowser.open(self.ip)
 
 class GridButtonEdit(QPushButton):
-    def __init__(self):
+    def __init__(self,grid_object):
         super(GridButtonEdit, self).__init__()
         self.setStyleSheet('QPushButton { color: rgb(238, 238, 236);}')
         self.setIcon(QIcon('icons/edit.svg'))
         self.clicked.connect(self.go_edit_fn)
+
+        self.grid_object = grid_object
     
     def go_edit_fn(self):
-        self.w2 = AddObjecWindow()
+        self.w2 = EditObjecWindow()
         self.w2.show() 
-        self.w2.add_object_button.clicked.connect(self.add_object_button_fn)
+        self.w2.object_name.setText(self.grid_object.name)
+        self.w2.ip.setText(self.grid_object.ip)
+        self.w2.edit_object_button.clicked.connect(self.edit_object_button_fn)
+    
+    def edit_object_button_fn(self):
+        # self.grid_object.w_link = GridButtonLink(self.w2.object_name.text(), self.w2.ip)
+        self.grid_object.update_layout(self.w2.object_name.text(), self.w2.ip.text())
 
 class GridButtonDelete(QPushButton):
     def __init__(self,grid_object):
@@ -159,7 +227,8 @@ class GridButtonDelete(QPushButton):
 
     def go_delete_fn(self):
         self.grid_object.delete()
-        pass
+        
+        # pass
 
 
 

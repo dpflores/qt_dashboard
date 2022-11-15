@@ -50,24 +50,6 @@ color:rgb(114, 159, 207)</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="add_object_button">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>210</y>
-     <width>81</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:rgb(238, 238, 236);
-
-background-color: rgb(32, 74, 135);</string>
-   </property>
-   <property name="text">
-    <string>Add</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
@@ -83,23 +65,6 @@ color:rgb(114, 159, 207)</string>
    </property>
    <property name="text">
     <string>Name:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ip">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>140</y>
-     <width>251</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-size:12pt; color:rgb(238, 238, 236)
-</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -119,6 +84,41 @@ font-size:15pt;
    </property>
    <property name="text">
     <string>New Device</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ip">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>140</y>
+     <width>251</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-size:12pt; color:rgb(238, 238, 236)
+</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="add_object_button">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>210</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:rgb(238, 238, 236);
+
+background-color: rgb(32, 74, 135);</string>
+   </property>
+   <property name="text">
+    <string>Add</string>
    </property>
   </widget>
  </widget>

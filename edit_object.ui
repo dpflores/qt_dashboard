@@ -7,14 +7,8 @@
     <x>0</x>
     <y>0</y>
     <width>490</width>
-    <height>550</height>
+    <height>285</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -22,31 +16,12 @@
   <property name="styleSheet">
    <string notr="true">background-color: rgb(46, 52, 54);</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>80</y>
-     <width>131</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:rgb(252, 175, 62);
-font-size:28pt;
-
-</string>
-   </property>
-   <property name="text">
-    <string>Login</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>230</y>
-     <width>80</width>
+     <x>120</x>
+     <y>140</y>
+     <width>41</width>
      <height>21</height>
     </rect>
    </property>
@@ -55,16 +30,33 @@ font-size:28pt;
 color:rgb(114, 159, 207)</string>
    </property>
    <property name="text">
-    <string>User:</string>
+    <string> IP:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="object_name">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>90</y>
+     <width>251</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-size:12pt; color:rgb(238, 238, 236)
+</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>300</y>
-     <width>121</width>
-     <height>31</height>
+     <y>90</y>
+     <width>71</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -72,45 +64,50 @@ color:rgb(114, 159, 207)</string>
 color:rgb(114, 159, 207)</string>
    </property>
    <property name="text">
-    <string>Password:</string>
+    <string>Name:</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="user">
+  <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>230</y>
-     <width>171</width>
-     <height>31</height>
+     <x>180</x>
+     <y>10</y>
+     <width>141</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-size:12pt; color:rgb(238, 238, 236)
-</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="password">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>300</y>
-     <width>171</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-size:12pt; color:rgb(238, 238, 236)
+    <string notr="true">color:rgb(252, 175, 62);
+font-size:15pt;
+
 </string>
    </property>
    <property name="text">
-    <string/>
+    <string>Edit Device</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="sign_button">
+  <widget class="QLineEdit" name="ip">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>370</y>
+     <x>180</x>
+     <y>140</y>
+     <width>251</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-size:12pt; color:rgb(238, 238, 236)
+</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="edit_object_button">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>200</y>
      <width>81</width>
      <height>41</height>
     </rect>
@@ -121,24 +118,7 @@ color:rgb(114, 159, 207)</string>
 background-color: rgb(32, 74, 135);</string>
    </property>
    <property name="text">
-    <string>Sign In</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="error_label">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>340</y>
-     <width>191</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-size:8pt;
-color:rgb(239, 41, 41);</string>
-   </property>
-   <property name="text">
-    <string/>
+    <string>Edit</string>
    </property>
   </widget>
  </widget>
