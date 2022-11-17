@@ -196,7 +196,8 @@ class GridButtonLink(QPushButton):
         self.clicked.connect(self.go_link_fn)
     
     def go_link_fn(self):
-        webbrowser.open(self.ip)
+        link = "http://"+self.ip+":1880/ui"
+        webbrowser.get().open(link)
 
 class GridButtonEdit(QPushButton):
     def __init__(self,grid_object):
