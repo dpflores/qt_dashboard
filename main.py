@@ -1,6 +1,8 @@
 import sys
 import webbrowser
 import socket
+import json
+
 
 
 # Core non-GUI classes used by other modules
@@ -20,7 +22,11 @@ PASSWORDS = {
     'hugo':'123'
 }
 
-VPN_ADRESS = '171.17.0.1'
+VPN_ADRESS = '192.168.88.190'
+
+JSON_FOLDER = 'data/.json/'
+JSON_DASHBOARD_PATH = JSON_FOLDER + 'db_dashboard.json'
+
 
 class LoginWindow(QWidget): 
     def __init__(self):
@@ -45,7 +51,7 @@ class LoginWindow(QWidget):
 
 
         # Delete after testing
-        # self.goto_dashboard()
+        self.goto_dashboard()
 
 
         if user in USERS and password == PASSWORDS[user]:
@@ -55,7 +61,7 @@ class LoginWindow(QWidget):
             
             self.error_label.setText('Invalid user or password')
     
-    ## LOOOOK
+
     def goto_dashboard(self):
         self.hide()
         self.dw = DashboardWindow()
@@ -77,6 +83,11 @@ class DashboardWindow(QWidget):
         # SuperClass
         super(DashboardWindow,self).__init__()
 
+        
+
+        # with open('dashboard.db','wb') as f:
+        #     pickle.dump(dashboard,f)
+
         # Loading the UI
         loadUi("qt_files/dashboard_widget.ui", self)
         self.add_button.clicked.connect(self.add_button_fn)
@@ -86,7 +97,7 @@ class DashboardWindow(QWidget):
         self.cols_count = 0
 
         # Managing the layout (QGridLayout)
-        self.ips = {}
+        self.db_data = {}
 
         # 
         try:
@@ -101,9 +112,21 @@ class DashboardWindow(QWidget):
             self.indicator.setText('disconnected')
             self.indicator.setStyleSheet("background-color:rgb(239, 41, 41)")
         
-        
-        # print(self.connected)
+        # Recover the previous configuration
+        try:
+            with open(JSON_DASHBOARD_PATH, "r") as read_file:
+                self.db_data = json.load(read_file)
+
+            for key in self.db_data:
+                new_widget = GridObject(key,self.db_data[key],self)
+                self.dashboard_layout.itemAt(0).widget().hide()
+                self.dashboard_layout.addWidget(new_widget, self.rows_count, self.cols_count)
+                self.rows_count +=1
+        except:
+            pass
+
     
+
     def add_button_fn(self):
         self.w2 = AddObjecWindow()
         self.w2.show() 
@@ -111,13 +134,20 @@ class DashboardWindow(QWidget):
         
 
     def add_object_button_fn(self):
-        self.ips[self.w2.object_name.text()] = self.w2.ip.text()
+        # self.ips[self.w2.object_name.text()] = self.w2.ip.text()
 
         new_widget = GridObject(self.w2.object_name.text(),self.w2.ip.text(),self)
         self.dashboard_layout.itemAt(0).widget().hide()
         self.dashboard_layout.addWidget(new_widget, self.rows_count, self.cols_count)
         self.rows_count +=1
         self.w2.deleteLater()
+
+    def closeEvent(self, event):
+        # Defaul close event
+        # print(self.db_data)
+
+        with open(JSON_DASHBOARD_PATH, "w") as f:
+            json.dump(self.db_data, f)
     
 
     
@@ -142,9 +172,12 @@ class GridObject(QFrame):
         super(GridObject, self).__init__()
 
         self.dashboard_window = dashboard_window
-
+        
         self.name = name
         self.ip = ip
+
+        # Saving data
+        self.dashboard_window.db_data[name] = ip
 
         self.w_link = GridButtonLink(self.name,self.ip)
         self.w_edit = GridButtonEdit(self)
@@ -162,8 +195,15 @@ class GridObject(QFrame):
         self.w_edit.deleteLater()
         self.w_delete.deleteLater()
 
+        # Removing the previous data
+        self.dashboard_window.db_data.pop(self.name)
+
+        # Updating data
         self.name = name
         self.ip = ip
+
+        # New data
+        self.dashboard_window.db_data[name] = ip
 
         self.w_link = GridButtonLink(self.name,self.ip)
         self.w_edit = GridButtonEdit(self)
@@ -176,6 +216,9 @@ class GridObject(QFrame):
         self.setLayout(self.layout)
     
     def delete(self):
+        # Removing the previous data
+        self.dashboard_window.db_data.pop(self.name)
+
         self.deleteLater()
         self.dashboard_window.rows_count -=1
         if self.dashboard_window.rows_count == 0:
