@@ -14,12 +14,13 @@ from PyQt5.QtWidgets import *
 # From QT designer to pyqt
 from PyQt5.uic import *
 
-USERS = ['del', 'diego','hugo']
+USERS = ['del', 'diego','hugo','root']
 
 PASSWORDS = {
     'del':'123',
     'diego':'321',
-    'hugo':'123'
+    'hugo':'123',
+    'root':'axotec'
 }
 
 VPN_ADRESS = '192.168.88.190'
