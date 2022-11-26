@@ -99,6 +99,9 @@ class DashboardWindow(QWidget):
         self.rows_count = 0
         self.cols_count = 0
 
+        # Index
+        self.current_index = 0
+
         # Managing the layout (QGridLayout)
         self.db_data = {}
 
@@ -117,22 +120,36 @@ class DashboardWindow(QWidget):
         
         # Recover the previous configuration
         try:
-            with open(JSON_DASHBOARD_PATH, "r") as read_file:
-                self.db_data = json.load(read_file)
-
-            for key in self.db_data:
-                
-                #### Change the default image
-
-                new_widget = GridObject(key,self.db_data[key][0],self.db_data[key][1],self.db_data[key][2], self)
-                self.dashboard_layout.itemAt(0).widget().hide()
-                self.dashboard_layout.addWidget(new_widget, self.rows_count, self.cols_count)
-                self.rows_count +=1
+            self.load_data()
         except:
             pass
-
     
+    def check_index(self):
+        # 5 columnas por fila
+        
+       
+        self.current_index +=1
+        if self.current_index%(5) == 0 and self.current_index != 0:
+            self.rows_count +=1
+            self.cols_count = 0
+        else:
+            self.cols_count += 1
+        
 
+        
+    def load_data(self):
+        with open(JSON_DASHBOARD_PATH, "r") as read_file:
+                self.db_data = json.load(read_file)
+
+        for key in self.db_data:
+            
+            new_widget = GridObject(key,self.db_data[key][0],self.db_data[key][1],self.db_data[key][2], self)
+            self.dashboard_layout.itemAt(0).widget().hide()
+            self.dashboard_layout.addWidget(new_widget, self.rows_count, self.cols_count)
+            
+            self.check_index()
+
+            
     def add_button_fn(self):
         self.w2 = AddObjecWindow()
         self.w2.show() 
@@ -141,11 +158,17 @@ class DashboardWindow(QWidget):
 
     def add_object_button_fn(self):
         # self.ips[self.w2.object_name.text()] = self.w2.ip.text()
+        if self.current_index<10:
+            new_widget = GridObject(self.current_index, self.w2.object_name.text(),self.w2.ip.text(), DEFAULT_IMAGE,self)
+            self.dashboard_layout.itemAt(0).widget().hide()
+            self.dashboard_layout.addWidget(new_widget, self.rows_count, self.cols_count)
+            
 
-        new_widget = GridObject(self.rows_count, self.w2.object_name.text(),self.w2.ip.text(), DEFAULT_IMAGE,self)
-        self.dashboard_layout.itemAt(0).widget().hide()
-        self.dashboard_layout.addWidget(new_widget, self.rows_count, self.cols_count)
-        self.rows_count +=1
+            # 5 columnas por fila
+            self.check_index()
+        else:
+            pass ###
+        print(self.current_index, self.rows_count, self.cols_count)
         self.w2.deleteLater()
 
     def closeEvent(self, event):
@@ -190,25 +213,68 @@ class GridObject(QFrame):
         # Saving data
         self.dashboard_window.db_data[index] = [name, ip, image_path]
 
-        self.w_link = GridButtonLink(self.name,self.ip,self.image_path)
-        self.w_edit = GridButtonEdit(self)
-        self.w_delete = GridButtonDelete(self)
-
-        
         self.layout = QHBoxLayout()
 
-        self.layout.setSpacing(0)
-        self.layout.setContentsMargins(0,0,0,0)
+        # Editando el dashboard object
+        self.dashboard_object = DashboardObject()
 
-        self.layout.addWidget(self.w_link,stretch=10)
-        self.layout.addWidget(self.w_edit,stretch=1)
-        self.layout.addWidget(self.w_delete,stretch=1)
+        do = self.dashboard_object
+
+        # Buttons functions
+        do.link_button.clicked.connect(self.go_link_fn)
+        do.edit_button.clicked.connect(self.go_edit_fn)
+        do.delete_button.clicked.connect(self.go_delete_fn)
+        
+        # Buttons style
+        do.edit_button.setIcon(QIcon('icons/edit.svg'))
+        do.delete_button.setIcon(QIcon('icons/delete.svg'))
+
+        # Name, image and data
+        do.name_label.setText(self.name)
+        do.link_button.setIcon(QIcon(self.image_path))
+        do.link_button.setIconSize(QSize(150,150))
+
+
+        self.layout.addWidget(self.dashboard_object)
+        
+        
         self.setLayout(self.layout)
+    
+    def go_link_fn(self):
+        link = "http://"+self.ip+":1880/ui"
+        webbrowser.get().open(link)
+
+    def go_edit_fn(self):
+        self.w2 = EditObjecWindow()
+        self.w2.show() 
+        self.w2.object_name.setText(self.name)
+        self.w2.ip.setText(self.ip)
+        self.w2.edit_object_button.clicked.connect(self.edit_object_button_fn)
+        self.w2.change_image_button.clicked.connect(self.change_image_button_fn)
+
+        # Adding the image
+        pixmap = QPixmap(self.image_path)
+        pixmap = pixmap.scaledToWidth(150)
+        self.w2.image_label.setPixmap(QPixmap(pixmap))
+    
+    def edit_object_button_fn(self):
+        # self.grid_object.w_link = GridButtonLink(self.w2.object_name.text(), self.w2.ip)
+        self.update_layout(self.w2.object_name.text(), self.w2.ip.text(),self.image_path)
+        self.w2.deleteLater()
+    
+    def change_image_button_fn(self):
+        fname = QFileDialog.getOpenFileName(self, 'Open File', 'c\\', 'Image files (*.jpg *.gif)')
+        # print(fname)
+        if fname[0]:
+            self.image_path = fname[0]
+    
+
+        # Updating the image
+        pixmap = QPixmap(self.image_path)
+        pixmap = pixmap.scaledToWidth(150)
+        self.w2.image_label.setPixmap(QPixmap(pixmap))
 
     def update_layout(self, name, ip, image_path):
-        self.w_link.deleteLater()
-        self.w_edit.deleteLater()
-        self.w_delete.deleteLater()
 
         # Updating data
         self.name = name
@@ -218,137 +284,43 @@ class GridObject(QFrame):
         # New data
         self.dashboard_window.db_data[self.index] = [name, ip, image_path]
 
-        self.w_link = GridButtonLink(self.name, self.ip, self.image_path)
-        self.w_edit = GridButtonEdit(self)
-        self.w_delete = GridButtonDelete(self)
-
-        self.layout.setSpacing(0)
-        self.layout.setContentsMargins(0,0,0,0)
-
-        self.layout.addWidget(self.w_link,stretch=10)
-        self.layout.addWidget(self.w_edit,stretch=1)
-        self.layout.addWidget(self.w_delete,stretch=1)
+        self.dashboard_object.name_label.setText(self.name)
+        self.dashboard_object.link_button.setIcon(QIcon(self.image_path))
+        self.dashboard_object.link_button.setIconSize(QSize(150,150))
 
         self.setLayout(self.layout)
-    
-    def delete(self):
+
+    def go_delete_fn(self):
         # Removing the previous data
         try:
             self.dashboard_window.db_data.pop(self.index)
         except:
             pass
 
-        self.deleteLater()
-        self.dashboard_window.rows_count -=1
-        if self.dashboard_window.rows_count == 0:
+        
+        
+        if self.dashboard_window.current_index%5 == 0 and self.dashboard_window.current_index != 0:
+            self.dashboard_window.rows_count -=1
+            self.dashboard_window.cols_count = 4
+        else:
+            self.dashboard_window.cols_count -= 1
+
+        self.dashboard_window.current_index -= 1
+        if self.dashboard_window.current_index == 0:
             self.dashboard_window.dashboard_layout.itemAt(0).widget().show()
-
-
-class GridButtonLink(QPushButton):
-    def __init__(self,name, ip, image_path):
-        super(GridButtonLink, self).__init__()
-      
-        self.setStyleSheet('QPushButton { color: rgb(0, 0, 0);background-color: rgb(235, 235, 235);text-align: left;}'
-                            "QPushButton::hover"
-                             "{"
-                             "background-color : rgb(170, 170, 170);"
-                             "}")
-        # Main attributes
-        self.setText(name)
-        self.ip = ip
-        self.image_path = image_path
-
-        self.clicked.connect(self.go_link_fn)
-
-        # Change button size
-        # self.setMinimumHeight(100)
-        # self.setMaximumHeight(100)
-
-        # self.setMinimumWidth(100)
-        # self.setMaximumWidth(100)
-
-        #Adding image
-        self.setIcon(QIcon(self.image_path))
-        self.setIconSize(QSize(75,75))
-        # self.setStyleSheet("QPushButton { text-align: left; }")
-
-
-    
-    def go_link_fn(self):
-        link = "http://"+self.ip+":1880/ui"
-        webbrowser.get().open(link)
-
-class GridButtonEdit(QPushButton):
-    def __init__(self,grid_object):
-        super(GridButtonEdit, self).__init__()
-        self.setStyleSheet('QPushButton { color: rgb(0, 0, 0);background-color: rgb(235, 235, 235);}'
-                            "QPushButton::hover"
-                             "{"
-                             "background-color : rgb(170, 170, 170);"
-                             "}")
-        self.setIcon(QIcon('icons/edit.svg'))
-        self.clicked.connect(self.go_edit_fn)
         
-        # Change button size
-        # self.setMinimumHeight(100)
-        # self.setMaximumHeight(100)
+        print(self.dashboard_window.current_index, self.dashboard_window.rows_count, self.dashboard_window.cols_count)
 
-        # self.setMinimumWidth(100)
-        # self.setMaximumWidth(100)
-
-        self.grid_object = grid_object
-    
-    def go_edit_fn(self):
-        self.w2 = EditObjecWindow()
-        self.w2.show() 
-        self.w2.object_name.setText(self.grid_object.name)
-        self.w2.ip.setText(self.grid_object.ip)
-        self.w2.edit_object_button.clicked.connect(self.edit_object_button_fn)
-        self.w2.change_image_button.clicked.connect(self.change_image_button_fn)
-
-        # Adding the image
-        pixmap = QPixmap(self.grid_object.image_path)
-        pixmap = pixmap.scaledToWidth(150)
-        self.w2.image_label.setPixmap(QPixmap(pixmap))
-    
-    def edit_object_button_fn(self):
-        # self.grid_object.w_link = GridButtonLink(self.w2.object_name.text(), self.w2.ip)
-        self.grid_object.update_layout(self.w2.object_name.text(), self.w2.ip.text(),self.grid_object.image_path)
-    
-    def change_image_button_fn(self):
-        fname = QFileDialog.getOpenFileName(self, 'Open File', 'c\\', 'Image files (*.jpg *.gif)')
-        # print(fname)
-        if fname[0]:
-            self.grid_object.image_path = fname[0]
-    
-
-        # Updating the image
-        pixmap = QPixmap(self.grid_object.image_path)
-        pixmap = pixmap.scaledToWidth(150)
-        self.w2.image_label.setPixmap(QPixmap(pixmap))
-
-class GridButtonDelete(QPushButton):
-    def __init__(self,grid_object):
-        super(GridButtonDelete, self).__init__()
-        self.setStyleSheet('QPushButton { color: rgb(0, 0, 0);background-color: rgb(235, 235, 235);}'
-                            "QPushButton::hover"
-                             "{"
-                             "background-color : rgb(170, 170, 170);"
-                             "}")
-        self.setIcon(QIcon('icons/delete.svg'))
-        self.clicked.connect(self.go_delete_fn)
+        self.deleteLater()
         
-        # Change button size
-        # self.setMinimumHeight(100)
-        # self.setMaximumHeight(100)
 
-        # self.setMinimumWidth(100)
-        # self.setMaximumWidth(100)
+class DashboardObject(QWidget):
+    def __init__(self):
+        # SuperClass
+        super(DashboardObject,self).__init__()
+        # Loading the UI
+        loadUi("qt_files/dashboard_object.ui", self)
 
-        self.grid_object = grid_object
-
-    def go_delete_fn(self):
-        self.grid_object.delete()
 
 
 def main():
@@ -362,9 +334,6 @@ def main():
     # Adding windows
 
     w = LoginWindow()
-
-
-    # w.resize(700, 550)
 
     w.show() 
     sys.exit(app.exec())

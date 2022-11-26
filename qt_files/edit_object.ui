@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>285</height>
+    <width>505</width>
+    <height>447</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>140</y>
+     <x>80</x>
+     <y>150</y>
      <width>41</width>
      <height>21</height>
     </rect>
@@ -36,8 +36,8 @@ color:rgb(114, 159, 207)</string>
   <widget class="QLineEdit" name="object_name">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>90</y>
+     <x>140</x>
+     <y>100</y>
      <width>251</width>
      <height>31</height>
     </rect>
@@ -53,8 +53,8 @@ color:rgb(114, 159, 207)</string>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>90</y>
+     <x>40</x>
+     <y>100</y>
      <width>71</width>
      <height>21</height>
     </rect>
@@ -89,8 +89,8 @@ font-size:15pt;
   <widget class="QLineEdit" name="ip">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>140</y>
+     <x>140</x>
+     <y>150</y>
      <width>251</width>
      <height>31</height>
     </rect>
@@ -106,8 +106,8 @@ font-size:15pt;
   <widget class="QPushButton" name="edit_object_button">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>200</y>
+     <x>200</x>
+     <y>360</y>
      <width>81</width>
      <height>41</height>
     </rect>
@@ -119,6 +119,37 @@ background-color: rgb(32, 74, 135);</string>
    </property>
    <property name="text">
     <string>Edit</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="change_image_button">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>200</y>
+     <width>158</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:rgb(238, 238, 236);
+
+background-color: rgb(85, 87, 83)</string>
+   </property>
+   <property name="text">
+    <string>Change Image</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="image_label">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>250</y>
+     <width>150</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
