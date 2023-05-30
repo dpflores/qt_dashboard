@@ -6,55 +6,48 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>692</height>
+    <width>595</width>
+    <height>473</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Dashboard</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(46, 52, 54);</string>
+   <string notr="true">background-color: rgb(238, 238, 236);</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,10">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <spacer name="horizontalSpacer_4">
+        <spacer name="horizontalSpacer_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>5</width>
+           <height>5</height>
           </size>
          </property>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="add_button">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+        <widget class="QLabel" name="label">
+         <property name="baseSize">
+          <size>
+           <width>500</width>
+           <height>100</height>
+          </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">color:rgb(238, 238, 236);
-
-background-color: rgb(32, 74, 135);</string>
+          <string notr="true">color:rgb(252, 175, 62);
+font-size:28pt;</string>
          </property>
          <property name="text">
-          <string>Add Device</string>
+          <string>DASHBOARD</string>
          </property>
         </widget>
        </item>
@@ -65,25 +58,23 @@ background-color: rgb(32, 74, 135);</string>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>5</width>
+           <height>5</height>
           </size>
          </property>
         </spacer>
        </item>
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="styleSheet">
-          <string notr="true">color:rgb(252, 175, 62);
-font-size:28pt;
-
-</string>
-         </property>
-         <property name="text">
-          <string>DASHBOARD</string>
-         </property>
-        </widget>
-       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="analyzeButton">
+       <property name="text">
+        <string>Analizar imagen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
@@ -98,64 +89,14 @@ font-size:28pt;
         </spacer>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,0,1">
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="styleSheet">
-              <string notr="true">color:rgb(255, 255, 255)</string>
-             </property>
-             <property name="text">
-              <string>VPN: </string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="indicator">
-             <property name="styleSheet">
-              <string notr="true">color:rgb(255, 255, 255)</string>
-             </property>
-             <property name="text">
-              <string> disconnected</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
+        <widget class="QLabel" name="image_label">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer_2">
+        <spacer name="horizontalSpacer_4">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -170,7 +111,14 @@ font-size:28pt;
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,10,1">
+      <widget class="QPushButton" name="exportButton">
+       <property name="text">
+        <string>Exportar data</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
@@ -185,24 +133,53 @@ font-size:28pt;
         </spacer>
        </item>
        <item>
-        <layout class="QGridLayout" name="dashboard_layout">
-         <property name="spacing">
-          <number>3</number>
+        <widget class="QTableWidget" name="tableSum">
+         <property name="sizeAdjustPolicy">
+          <enum>QAbstractScrollArea::AdjustToContents</enum>
          </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="empty_label">
-           <property name="styleSheet">
-            <string notr="true">color:rgb(238, 238, 236)</string>
-           </property>
-           <property name="text">
-            <string>No devices added</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
+         <column>
+          <property name="text">
+           <string>Talla (cm)</string>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="textAlignment">
+           <set>AlignLeading|AlignBottom</set>
+          </property>
+          <property name="background">
+           <color>
+            <red>243</red>
+            <green>243</green>
+            <blue>243</blue>
+           </color>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Ejemplares</string>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="background">
+           <color>
+            <red>243</red>
+            <green>243</green>
+            <blue>243</blue>
+           </color>
+          </property>
+         </column>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_6">
