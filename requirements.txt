@@ -1,3 +1,7 @@
 PyQt5
 pyinstaller
 opencv-python
+
+# para la camara o2d
+setuptools>=49.2.1
+pyodbc~=4.0.34
